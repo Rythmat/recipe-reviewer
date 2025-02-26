@@ -11,12 +11,10 @@ const fetchReviews = async( recipeId ) => {
   }
 }
 
-const myReviews = async() => {
-  //validateuser
-  const myUser = null//token held variable
+const myReviews = async(user) => {
   try {
     const {rows} = await client.query(`
-      SELECT * FROM reviews WHERE poster=${myUser.id};
+      SELECT * FROM reviews WHERE poster=${user};
     `);
     return rows;
   } catch (error) {
@@ -24,12 +22,32 @@ const myReviews = async() => {
   }
 }
 
-const postReview = async() => {
-  //validateuser
-  
+const postReview = async(title,description,recipeId,userId) => {
+  try {
+    const {rows} = await client.query(`
+      INSERT INTO reviews(title,description,recipe,poster)
+      VALUES ('${title}','${description}',${recipeId},${userId})
+      RETURNING *;
+    `);
+    return rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const deleteReview = async(reviewId) => {
+  try {
+    await client.query(`
+      DELETE FROM reviews WHERE id=${reviewId};
+    `);
+  } catch (error) {
+    throw new Error('Delete Failure');
+  }
 }
 
 module.exports = {
   fetchReviews,
-  myReviews
+  myReviews,
+  postReview,
+  deleteReview
 }

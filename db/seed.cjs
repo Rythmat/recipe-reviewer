@@ -37,7 +37,7 @@ const createTables = async() => {
       CREATE TABLE reviews(
       id SERIAL PRIMARY KEY,
       title VARCHAR(70) UNIQUE NOT NULL,
-      description VARCHAR(255),
+      description VARCHAR(255) NOT NULL,
       recipe INT REFERENCES recipes(id) NOT NULL,
       poster INT REFERENCES users(id) NOT NULL
       );
@@ -64,9 +64,6 @@ const databaSeed = async() => {
 
   await authenticateUser('taniwha','testerday');
   console.log('User Authenticated');
-
-  await validateUser();
-  console.log('User Validated!')
 
   const recipe1 = await postRecipe('Perfect Rice','Rice,Water','Clean the rice. Boil the water with the rice inside a pot. Lower to a simmer and cover the pot. Remove from the heat when the water is evaporated.', suser.id);
   console.log('Recipe Posted!');
